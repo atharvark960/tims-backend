@@ -19,39 +19,34 @@ public class UserService {
     // Retrieve all users
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userRepository.findAll();
-        return ResponseEntity.ok(users); // HTTP 200 with list of users
+        return ResponseEntity.ok(users);
     }
 
     // Retrieve a user by ID
-    public ResponseEntity<User> getUserById(Long id) {
+    public ResponseEntity<User> getUserById(int id) {
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
-            return ResponseEntity.ok(user.get()); // HTTP 200 with user details
+            return ResponseEntity.ok(user.get());
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(null); // HTTP 404 with null body
+                    .body(null);
         }
     }
 
     // Add a new user
     public ResponseEntity<User> createUser(User user) {
-        // Ensuring the username is unique
-        if (userRepository.existsByUsername(user.getUsername())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(null); // HTTP 409 for conflict
-        }
         User createdUser = userRepository.save(user);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(createdUser); // HTTP 201 with created user
+                .body(createdUser);
     }
 
     // Delete a user by ID
-    public ResponseEntity<String> deleteUser(Long id) {
+    public ResponseEntity<String> deleteUser(int id) {
         if (!userRepository.existsById(id)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("User with ID " + id + " does not exist"); // HTTP 404
+                    .body("User with ID " + id + " does not exist");
         }
         userRepository.deleteById(id);
-        return ResponseEntity.ok("User with ID " + id + " deleted successfully."); // HTTP 200
+        return ResponseEntity.ok("User with ID " + id + " deleted successfully.");
     }
 }
